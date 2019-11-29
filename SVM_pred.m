@@ -7,9 +7,9 @@ function Y_new = SVM_pred(X_new, X, Y,kernel,alpha,beta0)
 M = size(X_new,1);
 
 switch kernel
-    case 'linear'
+    case 'Linear'
         Ker=Ker_Linear(X,X_new);
-    case 'ploynomial'
+    case 'Polynomial'
         Ker=Ker_Polynomial(X,X_new);
     case 'RBF'
         Ker=Ker_RBF(X,X_new);
