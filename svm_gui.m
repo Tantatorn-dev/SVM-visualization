@@ -235,6 +235,8 @@ function clearButton_Callback(hObject, eventdata, handles)
 % hObject    handle to clearButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+datasetTable = findobj(0,'tag','datasetTable');
+set(datasetTable,'Data',cell(0));
 
 
 % --- Executes during object creation, after setting all properties.
