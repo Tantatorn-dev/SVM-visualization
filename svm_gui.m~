@@ -22,7 +22,7 @@ function varargout = svm_gui(varargin)
 
 % Edit the above text to modify the response to help svm_gui
 
-% Last Modified by GUIDE v2.5 29-Nov-2019 16:44:38
+% Last Modified by GUIDE v2.5 29-Nov-2019 21:34:29
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -136,14 +136,32 @@ end
 handles.metricdata.volume = volume;
 guidata(hObject,handles)
 
-% --- Executes on button press in calculate.
-function calculate_Callback(hObject, eventdata, handles)
-% hObject    handle to calculate (see GCBO)
+% --- Executes on button press in calculateButton.
+function calculateButton_Callback(hObject, eventdata, handles)
+% hObject    handle to calculateButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-mass = handles.metricdata.density * handles.metricdata.volume;
-set(handles.mass, 'String', mass);
+
+
+linearRadio = findobj(0,'tag','Linear');
+polynomialRadio = findobj(0,'tag','Polynomial');
+rbfRadio = findobj(0,'tag','RBF');
+sigmoidRadio = findobj(0,'tag','Sigmoid');
+
+choice = 'Linear';
+
+if(linearRadio.Value==1) 
+    choice = 'Linear';
+elseif(polynomialRadio.Value == 1)
+    choice = 'Polynomial';
+elseif(rbfRadio.Value == 1)
+    choice = 'RBF';
+elseif(sigmoidRadio.Value == 1)
+    choice = 'Sigmoid';
+end
+
+[alpha,Ker,beta0]=SVM(X,Y,choice)
 
 % --- Executes on button press in reset.
 function reset_Callback(hObject, eventdata, handles)
@@ -153,43 +171,14 @@ function reset_Callback(hObject, eventdata, handles)
 
 initialize_gui(gcbf, handles, true);
 
-% --- Executes when selected object changed in unitgroup.
-function unitgroup_SelectionChangedFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in unitgroup 
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-if (hObject == handles.english)
-    set(handles.text4, 'String', 'lb/cu.in');
-    set(handles.text5, 'String', 'cu.in');
-    set(handles.text6, 'String', 'lb');
-else
-    set(handles.text4, 'String', 'kg/cu.m');
-    set(handles.text5, 'String', 'cu.m');
-    set(handles.text6, 'String', 'kg');
-end
-
 % --------------------------------------------------------------------
 function initialize_gui(fig_handle, handles, isreset)
 % If the metricdata field is present and the reset flag is false, it means
 % we are we are just re-initializing a GUI by calling it from the cmd line
 % while it is up. So, bail out as we dont want to reset the data.
-if isfield(handles, 'metricdata') && ~isreset
-    return;
-end
 
-handles.metricdata.density = 0;
-handles.metricdata.volume  = 0;
 
-set(handles.density, 'String', handles.metricdata.density);
-set(handles.volume,  'String', handles.metricdata.volume);
-set(handles.mass, 'String', 0);
-
-set(handles.unitgroup, 'SelectedObject', handles.english);
-
-set(handles.text4, 'String', 'lb/cu.in');
-set(handles.text5, 'String', 'cu.in');
-set(handles.text6, 'String', 'lb');
+set(handles.unitgroup, 'SelectedObject', handles.Normal);
 
 % Update handles structure
 guidata(handles.figure1, handles);
@@ -230,13 +219,13 @@ function importButton_Callback(hObject, eventdata, handles)
 % hObject    handle to importButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-[filename pathname] = uigetfile({'.xlsx','.csv'},'File Selector');
+[filename, pathname] = uigetfile({'.csv'},'File Selector');
 fullpathname = strcat(pathname, filename);
-[filepath,name,ext] =
-text = fileread(fullpathname);
-set(handles.FullPathName, 'String', fullpathname);
-[num,txt,raw] = xlsread('InputInspectionFile.xlsx');
-save('InputInspectionFile')
+csv_data = csvread(fullpathname);
+
+datasetTable = findobj(0,'tag','datasetTable');
+set(datasetTable,'data',csv_data);
+
 
 
 
@@ -255,3 +244,18 @@ function datasetTable_CreateFcn(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 set(hObject,'Data',cell(0)); % no data at the table at the beginning
+
+
+
+% --- Executes on button press in showGraphButton.
+function showGraphButton_Callback(hObject, eventdata, handles)
+% hObject    handle to showGraphButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes when selected object is changed in unitgroup.
+function unitgroup_SelectionChangedFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in unitgroup 
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)

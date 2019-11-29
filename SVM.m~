@@ -3,7 +3,7 @@
 function [alpha,Ker,beta0]=SVM(X,Y,kernel)
 % X is N*p, Y is N*1,{-1,1}
 % Constant=Inf for Hard Margin
-global precision Cost;
+global  precision Cost
 
 switch kernel
     case 'Linear'
@@ -17,8 +17,6 @@ switch kernel
 end
 
 N= size(X,1);
-diag(Y)
-Ker
 H= diag(Y)*Ker*diag(Y);
 f= - ones(N,1);
 Aeq=Y';
