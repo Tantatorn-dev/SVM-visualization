@@ -230,6 +230,14 @@ function importButton_Callback(hObject, eventdata, handles)
 % hObject    handle to importButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+[filename, pathname] = uigetfile({'.csv'},'File Selector');
+fullpathname = strcat(pathname, filename);
+csv_data = csvread(fullpathname);
+
+datasetTable = findobj(0,'tag','datasetTable');
+set(datasetTable,'data',csv_data);
+
+
 
 
 % --- Executes on button press in clearButton.
