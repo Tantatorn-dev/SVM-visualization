@@ -216,6 +216,8 @@ data = get(datasetTable,'data');
 if(size(data,1) == 1)
     data(1,:) = [];
     set(datasetTable,'data',data);
+elseif(size(data,1) == 0)
+    disp('Table is empty');
 else
     data(end-1,:)=[];
     set(datasetTable,'data',data);
