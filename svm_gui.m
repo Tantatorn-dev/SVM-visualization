@@ -22,7 +22,7 @@ function varargout = svm_gui(varargin)
 
 % Edit the above text to modify the response to help svm_gui
 
-% Last Modified by GUIDE v2.5 29-Nov-2019 16:44:38
+% Last Modified by GUIDE v2.5 29-Nov-2019 19:23:49
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -255,3 +255,19 @@ function datasetTable_CreateFcn(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 set(hObject,'Data',cell(0)); % no data at the table at the beginning
+
+
+% --- Executes on button press in radiobutton25.
+function radiobutton25_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton25 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton25
+
+
+% --- Executes on button press in pushbutton9.
+function pushbutton9_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
