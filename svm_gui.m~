@@ -22,7 +22,7 @@ function varargout = svm_gui(varargin)
 
 % Edit the above text to modify the response to help svm_gui
 
-% Last Modified by GUIDE v2.5 29-Nov-2019 16:44:38
+% Last Modified by GUIDE v2.5 29-Nov-2019 16:20:39
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -214,13 +214,11 @@ function removeDataButton_Callback(hObject, eventdata, handles)
 datasetTable = findobj(0,'tag','datasetTable');
 data = get(datasetTable,'data');
 if(size(data,1) == 1)
-    data(1,:) = [];
-    set(datasetTable,'data',data);
+    data() = [];
 else
     data(end-1,:)=[];
     set(datasetTable,'data',data);
 end
-
 
 
 % --- Executes on button press in importButton.

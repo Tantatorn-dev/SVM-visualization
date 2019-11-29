@@ -8,7 +8,7 @@ Kernel_Cell={'linear';'ploynomial';'RBF';'Sigmoid'};
 % X is the matrix of input data with dimension of N-by-p
 % where N is the number of instances and p is the number of features
 % For the convenience of visualization, we define p=2 here;
-data_fisheriris;
+data_in;
 X=inputs;
 Y=outputs;
 
