@@ -111,16 +111,13 @@ define_parameters;
 
 [alpha,Ker,beta0]=SVM(X,Y,choice);
 
-alpha = mat2cell(alpha);
-Ker = mat2cell(Ker);
-beta0 = mat2cell(beta0);
-
 alphaTable = findobj(0,'tag','alphaTable');
 kernelTable = findobj(0,'tag','kernelTable');
 beta0Table = findobj(0,'tag','beta0Table');
 
 set(alphaTable,'data',alpha);
-
+set(kernelTable,'data',Ker);
+set(beta0Table,'data',beta0);
 
 
 
@@ -213,10 +210,8 @@ function showGraphButton_Callback(hObject, eventdata, handles)
 % hObject    handle to showGraphButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+alphaTable = findobj(0,'tag','alphaTable');
+kernelTable = findobj(0,'tag','kernelTable');
+beta0Table = findobj(0,'tag','beta0Table');
 
-
-% --- Executes when selected object is changed in unitgroup.
-function unitgroup_SelectionChangedFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in unitgroup 
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+alpha = get('data',
