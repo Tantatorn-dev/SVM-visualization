@@ -111,6 +111,14 @@ define_parameters;
 
 [alpha,Ker,beta0]=SVM(X,Y,choice);
 
+alphaTable = findobj(0,'tag','alphaTable');
+kernelTable = findobj(0,'tag','kernelTable');
+beta0Table = findobj(0,'tag','beta0Table');
+
+set(alphaTable,'data',alpha);
+set(kernelTable,'data',Ker);
+set(beta0Table,'data',beta0);
+
 
 
 % --- Executes on button press in reset.
