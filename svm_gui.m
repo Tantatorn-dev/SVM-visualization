@@ -111,6 +111,14 @@ define_parameters;
 
 [alpha,Ker,beta0]=SVM(X,Y,choice);
 
+alphaTable = findobj(0,'tag','alphaTable');
+kernelTable = findobj(0,'tag','kernelTable');
+beta0Table = findobj(0,'tag','beta0Table');
+
+set(alphaTable,'data',alpha);
+set(kernelTable,'data',Ker);
+set(beta0Table,'data',beta0);
+
 
 
 % --- Executes on button press in reset.
@@ -204,8 +212,37 @@ function showGraphButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 
-% --- Executes when selected object is changed in unitgroup.
-function unitgroup_SelectionChangedFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in unitgroup 
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+alphaTable = findobj(0,'tag','alphaTable');
+kernelTable = findobj(0,'tag','kernelTable');
+beta0Table = findobj(0,'tag','beta0Table');
+
+alpha = get(alphaTable,'data');
+beta0 = get(beta0Table,'data');
+
+datasetTable = findobj(0,'tag','datasetTable');
+data = get(datasetTable,'data');
+data = cell2mat(data);
+
+X = data(:,[1 2]);
+Y = data(:,3)
+
+choice = 'Linear';
+
+
+linearRadio = findobj(0,'tag','Linear');
+polynomialRadio = findobj(0,'tag','Polynomial');
+rbfRadio = findobj(0,'tag','RBF');
+sigmoidRadio = findobj(0,'tag','Sigmoid');
+
+if(linearRadio.Value==1) 
+    choice = 'Linear';
+elseif(polynomialRadio.Value == 1)
+    choice = 'Polynomial';
+elseif(rbfRadio.Value == 1)
+    choice = 'RBF';
+elseif(sigmoidRadio.Value == 1)
+    choice = 'Sigmoid';
+end
+
+SVM_plot(X,Y,alpha,beta0,choice);
+

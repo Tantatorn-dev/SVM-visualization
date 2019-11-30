@@ -46,7 +46,7 @@ switch kernel
         title({'SVM',strcat('Kernel:',kernel,';C=',num2str(Cost),';$\kappa$=',num2str(kappa1))}, 'FontSize', 18,...
     'Interpreter','latex');
 end
-legend({'+1:setosa';'-1:versicolor'},'FontSize',16,'Location', 'Best');
+legend({'+1:class A';'-1:class B'},'FontSize',16,'Location', 'Best');
 hold off
 % Maximize figure
 set(gcf, 'units','normalized','outerposition',[0 0 1 1]);

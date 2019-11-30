@@ -59,6 +59,7 @@ guidata(hObject, handles);
 
 initialize_gui(hObject, handles, false);
 
+
 % UIWAIT makes svm_gui wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
@@ -73,68 +74,6 @@ function varargout = svm_gui_OutputFcn(hObject, eventdata, handles)
 % Get default command line output from handles structure
 varargout{1} = handles.output;
 
-
-% --- Executes during object creation, after setting all properties.
-function density_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to density (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function density_Callback(hObject, eventdata, handles)
-% hObject    handle to density (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of density as text
-%        str2double(get(hObject,'String')) returns contents of density as a double
-density = str2double(get(hObject, 'String'));
-if isnan(density)
-    set(hObject, 'String', 0);
-    errordlg('Input must be a number','Error');
-end
-
-% Save the new density value
-handles.metricdata.density = density;
-guidata(hObject,handles)
-
-% --- Executes during object creation, after setting all properties.
-function volume_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to volume (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function volume_Callback(hObject, eventdata, handles)
-% hObject    handle to volume (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of volume as text
-%        str2double(get(hObject,'String')) returns contents of volume as a double
-volume = str2double(get(hObject, 'String'));
-if isnan(volume)
-    set(hObject, 'String', 0);
-    errordlg('Input must be a number','Error');
-end
-
-% Save the new volume value
-handles.metricdata.volume = volume;
-guidata(hObject,handles)
 
 % --- Executes on button press in calculateButton.
 function calculateButton_Callback(hObject, eventdata, handles)
@@ -161,7 +100,26 @@ elseif(sigmoidRadio.Value == 1)
     choice = 'Sigmoid';
 end
 
-[alpha,Ker,beta0]=SVM(X,Y,choice)
+datasetTable = findobj(0,'tag','datasetTable');
+data = get(datasetTable,'data');
+data = cell2mat(data);
+
+X = data(:,[1 2]);
+Y = data(:,3)
+
+define_parameters;
+
+[alpha,Ker,beta0]=SVM(X,Y,choice);
+
+alphaTable = findobj(0,'tag','alphaTable');
+kernelTable = findobj(0,'tag','kernelTable');
+beta0Table = findobj(0,'tag','beta0Table');
+
+set(alphaTable,'data',alpha);
+set(kernelTable,'data',Ker);
+set(beta0Table,'data',beta0);
+
+
 
 % --- Executes on button press in reset.
 function reset_Callback(hObject, eventdata, handles)
@@ -252,10 +210,8 @@ function showGraphButton_Callback(hObject, eventdata, handles)
 % hObject    handle to showGraphButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+alphaTable = findobj(0,'tag','alphaTable');
+kernelTable = findobj(0,'tag','kernelTable');
+beta0Table = findobj(0,'tag','beta0Table');
 
-
-% --- Executes when selected object is changed in unitgroup.
-function unitgroup_SelectionChangedFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in unitgroup 
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+alpha = get('data',
