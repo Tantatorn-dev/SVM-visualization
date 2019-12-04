@@ -22,7 +22,7 @@ function varargout = svm_gui(varargin)
 
 % Edit the above text to modify the response to help svm_gui
 
-% Last Modified by GUIDE v2.5 29-Nov-2019 21:34:29
+% Last Modified by GUIDE v2.5 04-Dec-2019 18:46:19
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -109,15 +109,21 @@ Y = data(:,3)
 
 define_parameters;
 
+tic
 [alpha,Ker,beta0]=SVM(X,Y,choice);
+t=toc;
 
 alphaTable = findobj(0,'tag','alphaTable');
 kernelTable = findobj(0,'tag','kernelTable');
 beta0Table = findobj(0,'tag','beta0Table');
 
+timeTable = findobj(0,'tag','timeTable');
+
 set(alphaTable,'data',alpha);
 set(kernelTable,'data',Ker);
 set(beta0Table,'data',beta0);
+
+set(timeTable,'data',t);
 
 
 
@@ -246,3 +252,11 @@ end
 
 SVM_plot(X,Y,alpha,beta0,choice);
 
+
+% --- Executes during object creation, after setting all properties.
+function timeTable_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to timeTable (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+timeTable = findobj(0,'tag','timeTable');
+set(datasetTable,'Data',cell(0));
