@@ -102,10 +102,11 @@ end
 
 datasetTable = findobj(0,'tag','datasetTable');
 data = get(datasetTable,'data');
+disp(data)
 data = cell2mat(data);
 
 X = data(:,[1 2]);
-Y = data(:,3)
+Y = data(:,3);
 
 define_parameters;
 
@@ -258,5 +259,5 @@ function timeTable_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to timeTable (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-timeTable = findobj(0,'tag','timeTable');
-set(datasetTable,'Data',cell(0));
+% timeTable = findobj(0,'tag','timeTable');
+% set(datasetTable,'Data',cell(0));

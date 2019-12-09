@@ -1,9 +1,9 @@
-function Y=Ker_Polynomial(X1,X2)
-global poly_con
+function Y=Ker_Loop_Linear(X1,X2)
+
 Y=zeros(size(X1,1),size(X2,1));%Gram Matrix
 for i=1:size(X1,1)
     for j=1:size(X2,1)
-        Y(i,j)=(1+dot(X1(i,:),X2(j,:))).^poly_con;
+        Y(i,j)=dot(X1(i,:),X2(j,:));
     end
 end
 return
