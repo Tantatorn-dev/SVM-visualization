@@ -12,7 +12,7 @@ switch mode
             case 'Polynomial'
                 func = @Ker_Spark_Polynomial;
             case 'RBF'
-                func = @Ker_RBF;
+                func = @Ker_Spark_RBF;
             case 'Sigmoid'
                 func = @Ker_Spark_Sigmoid;
             otherwise
@@ -25,7 +25,7 @@ switch mode
             case 'Polynomial'
                 func = @Ker_Loop_Polynomial;
             case 'RBF'
-                func = @Ker_RBF;
+                func = @Ker_Loop_RBF;
             case 'Sigmoid'
                 func = @Ker_Loop_Sigmoid;
             otherwise
