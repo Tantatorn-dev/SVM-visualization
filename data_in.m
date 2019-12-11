@@ -1,7 +1,7 @@
 %Fisher Iris data
 %load fisheriris
-inputs=[1 0; 2 0; 0.4 0.2; 0 2;1 0.5; 2 1; 0.5 1; 1 1];
-outputs=[1;1;-1;-1;1;1;-1;-1];
+inputs=[1 0; 2 0; 1.5 -0.5; 2.5 0.5;1 0.5; 2 1; 0.5 0; 1 1.5];
+outputs=[-1;-1;1;1;-1;-1;1;1];
 
 %N=max(size(species));
 %{

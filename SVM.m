@@ -7,13 +7,13 @@ global precision Cost;
 
 switch kernel
     case 'Linear'
-        Ker = Ker_Linear(X, X);
+        Ker = Ker_Spark_Linear(X, X);
     case 'Polynomial'
-        Ker = Ker_Polynomial(X, X);
+        Ker = Ker_Spark_Polynomial(X, X);
     case 'RBF'
         Ker = Ker_RBF(X, X);
     case 'Sigmoid'
-        Ker = Ker_Sigmoid(X, X);
+        Ker = Ker_Spark_Sigmoid(X, X);
 end
 N = size(X, 1);
 H = diag(Y) * Ker * diag(Y);
@@ -25,10 +25,8 @@ b = [];
 lb = zeros(N, 1);
 ub = repmat(Cost, N, 1);
 alpha = quadprog(H, f, A, b, Aeq, beq, lb, ub);
-
 serial_num = (1:size(X, 1))';
 serial_sv = serial_num(alpha > precision & alpha < Cost);
-
 temp_beta0 = 0;
 for i = 1: size(serial_sv, 1)
     temp_beta0 = temp_beta0 + Y(serial_sv(i));

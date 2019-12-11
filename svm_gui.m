@@ -102,7 +102,6 @@ end
 
 datasetTable = findobj(0,'tag','datasetTable');
 data = get(datasetTable,'data');
-disp(data)
 data = cell2mat(data);
 
 X = data(:,[1 2]);
@@ -187,7 +186,8 @@ function importButton_Callback(hObject, eventdata, handles)
 [filename, pathname] = uigetfile({'.csv'},'File Selector');
 fullpathname = strcat(pathname, filename);
 csv_data = csvread(fullpathname);
-
+disp(class(csv_data))
+disp(csv_data)
 datasetTable = findobj(0,'tag','datasetTable');
 set(datasetTable,'data',csv_data);
 

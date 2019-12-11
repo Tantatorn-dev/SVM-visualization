@@ -8,8 +8,10 @@
 %                ouoam2555@gmail.com
 
 function [ C_out ] = Multiplication_by_Column_unb( A, B, func )
-
 %------------------------------------------------------------%
+%
+% B is transpose then use top to bottom 
+%
   C = zeros(size(A,1),size(B,1)); %Gram Matrix
 %------------------------------------------------------------%
 
@@ -28,7 +30,7 @@ function [ C_out ] = Multiplication_by_Column_unb( A, B, func )
                                     BB, ...
                                     1, 'FLA_BOTTOM' );
 
-    [ C0, c1, C2 ]= FLA_Repart_1x2_to_1x3( CL, CR, ...
+    [ C0, c1, C2 ] = FLA_Repart_1x2_to_1x3( CL, CR, ...
                                          1, 'FLA_RIGHT' );
 
     %------------------------------------------------------------%

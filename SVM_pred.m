@@ -8,15 +8,14 @@ M = size(X_new, 1);
 
 switch kernel
     case 'Linear'
-        Ker = Ker_Linear(X, X_new);
+        Ker = Ker_Spark_Linear(X, X_new);
     case 'Polynomial'
-        Ker = Ker_Polynomial(X, X_new);
+        Ker = Ker_Spark_Polynomial(X, X_new);
     case 'RBF'
         Ker = Ker_RBF(X, X_new);
     case 'Sigmoid'
-        Ker = Ker_Sigmoid(X, X_new);
+        Ker = Ker_Spark_Sigmoid(X, X_new);
 end
-
 Y_new = sum(diag(alpha.*Y) * Ker, 1)' + beta0 * ones(M, 1);
 
 return
