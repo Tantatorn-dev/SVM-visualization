@@ -1,29 +1,40 @@
-function [func] = Algo_Select(mode, kernel)
+function [out] = Algo_Select(mode, kernel)
 %Algo_Select Select what function of algorithm will use
 %   Detailed explanation goes here
+addpath('./loop/');
+addpath('./spark/');
+addpath('./FLA/');
 switch mode
     case 'Spark'
         switch kernel
             case 'Linear'
-                func = Ker_Spark_Linear;
+                func = @Ker_Spark_Linear;
             case 'Polynomial'
-                func = Ker_Spark_Polynomia;
+                func = @Ker_Spark_Polynomial;
             case 'RBF'
-                func = Ker_RBF;
+                func = @Ker_RBF;
             case 'Sigmoid'
-                func = Ker_Spark_Sigmoid;
+                func = @Ker_Spark_Sigmoid;
+            otherwise
+                error('Do not have select kernal in this select mode')
         end
     case 'Loop'
         switch kernel
             case 'Linear'
-                func = Ker_Loop_Linear;
+                func = @Ker_Loop_Linear;
             case 'Polynomial'
-                func = Ker_Loop_Polynomia;
+                func = @Ker_Loop_Polynomial;
             case 'RBF'
-                func = Ker_RBF;
+                func = @Ker_RBF;
             case 'Sigmoid'
-                func = Ker_Loop_Sigmoid;
+                func = @Ker_Loop_Sigmoid;
+            otherwise
+                error('Do not have select kernal in this select mode')
         end
+    otherwise
+        error('Do not have select mode')
 end
+
+out = struct('func', func, 'mode', mode, 'name', kernel);
 end
 

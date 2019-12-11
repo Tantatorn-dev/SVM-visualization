@@ -4,17 +4,7 @@ function [alpha, Ker, beta0] = SVM(X, Y, kernel)
 % X is N*p, Y is N*1,{-1,1}
 % Constant=Inf for Hard Margin
 global precision Cost;
-
-switch kernel
-    case 'Linear'
-        Ker = Ker_Spark_Linear(X, X);
-    case 'Polynomial'
-        Ker = Ker_Spark_Polynomial(X, X);
-    case 'RBF'
-        Ker = Ker_RBF(X, X);
-    case 'Sigmoid'
-        Ker = Ker_Spark_Sigmoid(X, X);
-end
+Ker = kernel.func(X, X);
 N = size(X, 1);
 H = diag(Y) * Ker * diag(Y);
 f = -ones(N, 1);

@@ -2,10 +2,6 @@
 close all
 clear 
 
-addpath('./loop/');
-addpath('./spark/');
-addpath('./FLA/');
-
 Kernel_Cell = {'Linear'; 'Polynomial'; 'RBF'; 'Sigmoid'};
 
 % Step 1: Load the data
@@ -26,7 +22,7 @@ define_parameters;
 
 % Step 3: Fit the model
 % Choose the kernel
-kernel = char(Kernel_Cell(3));
+kernel = Algo_Select('Spark', char(Kernel_Cell(2)));
 %
 [alpha, Ker, beta0] = SVM(X, Y, kernel);
 
