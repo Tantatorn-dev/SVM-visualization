@@ -22,7 +22,7 @@ function varargout = svm_gui(varargin)
 
 % Edit the above text to modify the response to help svm_gui
 
-% Last Modified by GUIDE v2.5 04-Dec-2019 18:46:19
+% Last Modified by GUIDE v2.5 12-Dec-2019 20:37:24
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -81,49 +81,30 @@ function calculateButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+UIselectMethod = get(handles.selectmethod, 'SelectedObject');
+selectMethod = get(UIselectMethod, 'String');
 
+UIselectKernel = get(handles.selectkernel, 'SelectedObject');
+selectKernel = get(UIselectKernel, 'String');
 
-linearRadio = findobj(0,'tag','Linear');
-polynomialRadio = findobj(0,'tag','Polynomial');
-rbfRadio = findobj(0,'tag','RBF');
-sigmoidRadio = findobj(0,'tag','Sigmoid');
-
-choice = 'Linear';
-
-if(linearRadio.Value==1) 
-    choice = 'Linear';
-elseif(polynomialRadio.Value == 1)
-    choice = 'Polynomial';
-elseif(rbfRadio.Value == 1)
-    choice = 'RBF';
-elseif(sigmoidRadio.Value == 1)
-    choice = 'Sigmoid';
-end
-
-datasetTable = findobj(0,'tag','datasetTable');
-data = get(datasetTable,'data');
-data = cell2mat(data);
+data = get(handles.datasetTable,'data');
 
 X = data(:,[1 2]);
 Y = data(:,3);
 
 define_parameters;
 
+kernel = Algo_Select(selectMethod, selectKernel);
+
 tic
-[alpha,Ker,beta0]=SVM(X,Y,choice);
+[alpha,Ker,beta0]=SVM(X,Y,kernel);
 t=toc;
 
-alphaTable = findobj(0,'tag','alphaTable');
-kernelTable = findobj(0,'tag','kernelTable');
-beta0Table = findobj(0,'tag','beta0Table');
+set(handles.alphaTable,'data',alpha);
+set(handles.kernelTable,'data',Ker);
+set(handles.beta0Table,'data',beta0);
 
-timeTable = findobj(0,'tag','timeTable');
-
-set(alphaTable,'data',alpha);
-set(kernelTable,'data',Ker);
-set(beta0Table,'data',beta0);
-
-set(timeTable,'data',t);
+set(handles.timeTable,'data',t);
 
 
 
@@ -141,8 +122,7 @@ function initialize_gui(fig_handle, handles, isreset)
 % we are we are just re-initializing a GUI by calling it from the cmd line
 % while it is up. So, bail out as we dont want to reset the data.
 
-
-set(handles.unitgroup, 'SelectedObject', handles.Normal);
+set(handles.selectmethod, 'SelectedObject', handles.Normal);
 
 % Update handles structure
 guidata(handles.figure1, handles);
@@ -153,10 +133,10 @@ function addDataButton_Callback(hObject, eventdata, handles)
 % hObject    handle to addDataButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-datasetTable = findobj(0,'tag','datasetTable');
-data = get(datasetTable,'data');
-data(end+1,:)={0 0 0};
-set(datasetTable,'data',data);
+
+data = get(handles.datasetTable, 'data');
+data(end + 1, :) = [0 0 1];
+set(handles.datasetTable, 'data', data);
 
 % --- Executes on button press in removeDataButton.
 function removeDataButton_Callback(hObject, eventdata, handles)
@@ -164,16 +144,12 @@ function removeDataButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-datasetTable = findobj(0,'tag','datasetTable');
-data = get(datasetTable,'data');
-if(size(data,1) == 1)
-    data(1,:) = [];
-    set(datasetTable,'data',data);
-elseif(size(data,1) == 0)
+data = get(handles.datasetTable,'data');
+if(size(data, 1) == 0)
     disp('Table is empty');
 else
-    data(end-1,:)=[];
-    set(datasetTable,'data',data);
+    data = data(1 : end - 1, :);
+    set(handles.datasetTable, 'data', data);
 end
 
 
@@ -186,10 +162,7 @@ function importButton_Callback(hObject, eventdata, handles)
 [filename, pathname] = uigetfile({'.csv'},'File Selector');
 fullpathname = strcat(pathname, filename);
 csv_data = csvread(fullpathname);
-disp(class(csv_data))
-disp(csv_data)
-datasetTable = findobj(0,'tag','datasetTable');
-set(datasetTable,'data',csv_data);
+set(handles.datasetTable,'data',csv_data);
 
 
 
@@ -199,8 +172,7 @@ function clearButton_Callback(hObject, eventdata, handles)
 % hObject    handle to clearButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-datasetTable = findobj(0,'tag','datasetTable');
-set(datasetTable,'Data',cell(0));
+set(handles.datasetTable, 'Data', []);
 
 
 % --- Executes during object creation, after setting all properties.
@@ -208,7 +180,7 @@ function datasetTable_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to datasetTable (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-set(hObject,'Data',cell(0)); % no data at the table at the beginning
+set(hObject, 'Data', []); % no data at the table at the beginning
 
 
 
@@ -218,40 +190,23 @@ function showGraphButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+alpha = get(handles.alphaTable,'data');
+beta0 = get(handles.beta0Table,'data');
 
-alphaTable = findobj(0,'tag','alphaTable');
-kernelTable = findobj(0,'tag','kernelTable');
-beta0Table = findobj(0,'tag','beta0Table');
+UIselectMethod = get(handles.selectmethod, 'SelectedObject');
+selectMethod = get(UIselectMethod, 'String');
 
-alpha = get(alphaTable,'data');
-beta0 = get(beta0Table,'data');
+UIselectKernel = get(handles.selectkernel, 'SelectedObject');
+selectKernel = get(UIselectKernel, 'String');
 
-datasetTable = findobj(0,'tag','datasetTable');
-data = get(datasetTable,'data');
-data = cell2mat(data);
+data = get(handles.datasetTable,'data');
 
 X = data(:,[1 2]);
-Y = data(:,3)
+Y = data(:,3);
 
-choice = 'Linear';
+kernel = Algo_Select(selectMethod, selectKernel);
 
-
-linearRadio = findobj(0,'tag','Linear');
-polynomialRadio = findobj(0,'tag','Polynomial');
-rbfRadio = findobj(0,'tag','RBF');
-sigmoidRadio = findobj(0,'tag','Sigmoid');
-
-if(linearRadio.Value==1) 
-    choice = 'Linear';
-elseif(polynomialRadio.Value == 1)
-    choice = 'Polynomial';
-elseif(rbfRadio.Value == 1)
-    choice = 'RBF';
-elseif(sigmoidRadio.Value == 1)
-    choice = 'Sigmoid';
-end
-
-SVM_plot(X,Y,alpha,beta0,choice);
+SVM_plot(X, Y, alpha, beta0, kernel);
 
 
 % --- Executes during object creation, after setting all properties.
@@ -261,3 +216,32 @@ function timeTable_CreateFcn(hObject, eventdata, handles)
 % handles    empty - handles not created until after all CreateFcns called
 % timeTable = findobj(0,'tag','timeTable');
 % set(datasetTable,'Data',cell(0));
+
+
+% --- Executes when selected object is changed in selectmethod.
+function selectmethod_SelectionChangedFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in selectmethod 
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes when selected cell(s) is changed in datasetTable.
+function datasetTable_CellSelectionCallback(hObject, eventdata, handles)
+% hObject    handle to datasetTable (see GCBO)
+% eventdata  structure with the following fields (see MATLAB.UI.CONTROL.TABLE)
+%	Indices: row and column indices of the cell(s) currently selecteds
+% handles    structure with handles and user data (see GUIDATA)
+if ~isempty(eventdata.Indices)
+    Indices = eventdata.Indices;
+    if Indices(2) == 3
+        data = get(handles.datasetTable,'data');
+        val = data(Indices(1), 3);
+        if val == 1
+            val = -1;
+        else
+            val = 1;
+        end
+        data(Indices(1), 3) = val;
+        set(handles.datasetTable, 'data', data);
+    end
+end

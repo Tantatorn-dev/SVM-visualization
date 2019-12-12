@@ -5,7 +5,7 @@ addpath('./loop/');
 addpath('./spark/');
 addpath('./FLA/');
 switch mode
-    case 'Spark'
+    case {'Spark', 'SPARK'}
         switch kernel
             case 'Linear'
                 func = @Ker_Spark_Linear;
@@ -18,7 +18,7 @@ switch mode
             otherwise
                 error('Do not have select kernal in this select mode')
         end
-    case 'Loop'
+    case {'Loop', 'Normal'}
         switch kernel
             case 'Linear'
                 func = @Ker_Loop_Linear;
