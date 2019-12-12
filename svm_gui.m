@@ -22,7 +22,7 @@ function varargout = svm_gui(varargin)
 
 % Edit the above text to modify the response to help svm_gui
 
-% Last Modified by GUIDE v2.5 12-Dec-2019 20:37:24
+% Last Modified by GUIDE v2.5 12-Dec-2019 23:50:04
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -42,6 +42,7 @@ else
     gui_mainfcn(gui_State, varargin{:});
 end
 % End initialization code - DO NOT EDIT
+
 
 % --- Executes just before svm_gui is made visible.
 function svm_gui_OpeningFcn(hObject, eventdata, handles, varargin)
@@ -75,47 +76,6 @@ function varargout = svm_gui_OutputFcn(hObject, eventdata, handles)
 varargout{1} = handles.output;
 
 
-% --- Executes on button press in calculateButton.
-function calculateButton_Callback(hObject, eventdata, handles)
-% hObject    handle to calculateButton (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-UIselectMethod = get(handles.selectmethod, 'SelectedObject');
-selectMethod = get(UIselectMethod, 'String');
-
-UIselectKernel = get(handles.selectkernel, 'SelectedObject');
-selectKernel = get(UIselectKernel, 'String');
-
-data = get(handles.datasetTable,'data');
-
-X = data(:,[1 2]);
-Y = data(:,3);
-
-define_parameters;
-
-kernel = Algo_Select(selectMethod, selectKernel);
-
-tic
-[alpha,Ker,beta0]=SVM(X,Y,kernel);
-t=toc;
-
-set(handles.alphaTable,'data',alpha);
-set(handles.kernelTable,'data',Ker);
-set(handles.beta0Table,'data',beta0);
-
-set(handles.timeTable,'data',t);
-
-
-
-% --- Executes on button press in reset.
-function reset_Callback(hObject, eventdata, handles)
-% hObject    handle to reset (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-initialize_gui(gcbf, handles, true);
-
 % --------------------------------------------------------------------
 function initialize_gui(fig_handle, handles, isreset)
 % If the metricdata field is present and the reset flag is false, it means
@@ -126,6 +86,137 @@ set(handles.selectmethod, 'SelectedObject', handles.Normal);
 
 % Update handles structure
 guidata(handles.figure1, handles);
+
+
+
+
+% --- Executes during object creation, after setting all properties.
+function beta0Table_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to beta0Table (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+set(hObject, 'Data', []);
+
+
+% --- Executes during object creation, after setting all properties.
+function alphaTable_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to alphaTable (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+set(hObject, 'Data', []);
+
+
+% --- Executes during object creation, after setting all properties.
+function kernelTable_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to kernelTable (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+set(hObject, 'Data', []);
+
+
+% --- Executes during object creation, after setting all properties.
+function timeTable_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to timeTable (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+set(hObject, 'Data', cell(0));
+
+% --- Executes during object creation, after setting all properties.
+function datasetTable_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to datasetTable (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+set(hObject, 'Data', []); % no data at the table at the beginning
+
+
+
+
+
+% --- Executes on button press in calculateButton.
+function calculateButton_Callback(hObject, eventdata, handles)
+% hObject    handle to calculateButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+global INmatrix INkernel
+
+UIselectMethod = get(handles.selectmethod, 'SelectedObject');
+selectMethod = get(UIselectMethod, 'String');
+
+UIselectKernel = get(handles.selectkernel, 'SelectedObject');
+selectKernel = get(UIselectKernel, 'String');
+
+data = get(handles.datasetTable, 'data');
+if size(data, 1) == 0
+    opts.WindowStyle = 'replace';
+    opts.Interpreter = 'tex';
+    errordlg({'\fontsize{10} Input Data is empty.'}, 'Error', opts);
+    return
+end
+
+X = data(:, [1 2]);
+Y = data(:, 3);
+
+define_parameters;
+
+kernel = Algo_Select(selectMethod, selectKernel);
+
+tic
+[alpha, Ker, beta0] = SVM(X, Y, kernel);
+t = toc;
+
+set(handles.alphaTable, 'data', alpha);
+set(handles.kernelTable, 'data', Ker);
+set(handles.beta0Table, 'data', beta0);
+
+timeTable = get(handles.timeTable, 'data');
+timeTable(2:end+1, :) = timeTable(1:end, :);
+timeTable(1,:) = {selectMethod, selectKernel, t};
+set(handles.timeTable,'data',timeTable);
+
+INmatrix = data;
+INkernel = selectKernel;
+
+
+% --- Executes on button press in showGraphButton.
+function showGraphButton_Callback(hObject, eventdata, handles)
+% hObject    handle to showGraphButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global INmatrix INkernel
+
+alpha = get(handles.alphaTable,'data');
+beta0 = get(handles.beta0Table,'data');
+
+UIselectMethod = get(handles.selectmethod, 'SelectedObject');
+selectMethod = get(UIselectMethod, 'String');
+
+UIselectKernel = get(handles.selectkernel, 'SelectedObject');
+selectKernel = get(UIselectKernel, 'String');
+
+data = get(handles.datasetTable,'data');
+
+if isempty(INmatrix)
+    INmatrix = [];
+end
+if isempty(INkernel)
+    INkernel = "";
+end
+if ~isequal(data, INmatrix) || ~isequal(selectKernel, INkernel)
+    opts.WindowStyle = 'replace';
+    opts.Interpreter = 'tex';
+    errordlg({'\fontsize{10}You change value or parameter.'; 'You much click calculate first.'}, 'Error', opts);
+    return
+end
+
+X = data(:,[1 2]);
+Y = data(:,3);
+
+kernel = Algo_Select(selectMethod, selectKernel);
+
+SVM_plot(X, Y, alpha, beta0, kernel);
+
+
 
 
 % --- Executes on button press in addDataButton.
@@ -152,20 +243,15 @@ else
     set(handles.datasetTable, 'data', data);
 end
 
-
-
 % --- Executes on button press in importButton.
 function importButton_Callback(hObject, eventdata, handles)
 % hObject    handle to importButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-[filename, pathname] = uigetfile({'.csv'},'File Selector');
+[filename, pathname] = uigetfile({'.csv'}, 'File Selector');
 fullpathname = strcat(pathname, filename);
 csv_data = csvread(fullpathname);
-set(handles.datasetTable,'data',csv_data);
-
-
-
+set(handles.datasetTable, 'data', csv_data);
 
 % --- Executes on button press in clearButton.
 function clearButton_Callback(hObject, eventdata, handles)
@@ -174,55 +260,15 @@ function clearButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 set(handles.datasetTable, 'Data', []);
 
-
-% --- Executes during object creation, after setting all properties.
-function datasetTable_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to datasetTable (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-set(hObject, 'Data', []); % no data at the table at the beginning
-
-
-
-% --- Executes on button press in showGraphButton.
-function showGraphButton_Callback(hObject, eventdata, handles)
-% hObject    handle to showGraphButton (see GCBO)
+% --- Executes on button press in pushbutton10.
+function pushbutton10_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton10 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-alpha = get(handles.alphaTable,'data');
-beta0 = get(handles.beta0Table,'data');
-
-UIselectMethod = get(handles.selectmethod, 'SelectedObject');
-selectMethod = get(UIselectMethod, 'String');
-
-UIselectKernel = get(handles.selectkernel, 'SelectedObject');
-selectKernel = get(UIselectKernel, 'String');
-
-data = get(handles.datasetTable,'data');
-
-X = data(:,[1 2]);
-Y = data(:,3);
-
-kernel = Algo_Select(selectMethod, selectKernel);
-
-SVM_plot(X, Y, alpha, beta0, kernel);
+set(handles.timeTable, 'Data', cell(0));
 
 
-% --- Executes during object creation, after setting all properties.
-function timeTable_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to timeTable (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-% timeTable = findobj(0,'tag','timeTable');
-% set(datasetTable,'Data',cell(0));
 
-
-% --- Executes when selected object is changed in selectmethod.
-function selectmethod_SelectionChangedFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in selectmethod 
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
 
 % --- Executes when selected cell(s) is changed in datasetTable.
@@ -245,3 +291,4 @@ if ~isempty(eventdata.Indices)
         set(handles.datasetTable, 'data', data);
     end
 end
+

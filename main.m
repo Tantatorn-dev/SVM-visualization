@@ -22,7 +22,7 @@ define_parameters;
 
 % Step 3: Fit the model
 % Choose the kernel
-kernel = Algo_Select('Spark', char(Kernel_Cell(2)));
+kernel = Algo_Select('Loop', char(Kernel_Cell(3)));
 %
 [alpha, Ker, beta0] = SVM(X, Y, kernel);
 
