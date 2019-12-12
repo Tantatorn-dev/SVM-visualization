@@ -60,7 +60,6 @@ guidata(hObject, handles);
 
 initialize_gui(hObject, handles, false);
 
-
 % UIWAIT makes svm_gui wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
@@ -91,16 +90,24 @@ guidata(handles.figure1, handles);
 
 
 % --- Executes during object creation, after setting all properties.
-function beta0Table_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to beta0Table (see GCBO)
+function datasetTable_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to datasetTable (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+set(hObject, 'Data', []); % no data at the table at the beginning
+
+
+% --- Executes during object creation, after setting all properties.
+function alphaTable_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to alphaTable (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 set(hObject, 'Data', []);
 
 
 % --- Executes during object creation, after setting all properties.
-function alphaTable_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to alphaTable (see GCBO)
+function beta0Table_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to beta0Table (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 set(hObject, 'Data', []);
@@ -121,12 +128,6 @@ function timeTable_CreateFcn(hObject, eventdata, handles)
 % handles    empty - handles not created until after all CreateFcns called
 set(hObject, 'Data', cell(0));
 
-% --- Executes during object creation, after setting all properties.
-function datasetTable_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to datasetTable (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-set(hObject, 'Data', []); % no data at the table at the beginning
 
 
 
@@ -217,8 +218,6 @@ kernel = Algo_Select(selectMethod, selectKernel);
 SVM_plot(X, Y, alpha, beta0, kernel);
 
 
-
-
 % --- Executes on button press in addDataButton.
 function addDataButton_Callback(hObject, eventdata, handles)
 % hObject    handle to addDataButton (see GCBO)
@@ -228,6 +227,7 @@ function addDataButton_Callback(hObject, eventdata, handles)
 data = get(handles.datasetTable, 'data');
 data(end + 1, :) = [0 0 1];
 set(handles.datasetTable, 'data', data);
+
 
 % --- Executes on button press in removeDataButton.
 function removeDataButton_Callback(hObject, eventdata, handles)
@@ -243,6 +243,7 @@ else
     set(handles.datasetTable, 'data', data);
 end
 
+
 % --- Executes on button press in importButton.
 function importButton_Callback(hObject, eventdata, handles)
 % hObject    handle to importButton (see GCBO)
@@ -253,12 +254,14 @@ fullpathname = strcat(pathname, filename);
 csv_data = csvread(fullpathname);
 set(handles.datasetTable, 'data', csv_data);
 
+
 % --- Executes on button press in clearButton.
 function clearButton_Callback(hObject, eventdata, handles)
 % hObject    handle to clearButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 set(handles.datasetTable, 'Data', []);
+
 
 % --- Executes on button press in pushbutton10.
 function pushbutton10_Callback(hObject, eventdata, handles)
@@ -291,4 +294,3 @@ if ~isempty(eventdata.Indices)
         set(handles.datasetTable, 'data', data);
     end
 end
-
