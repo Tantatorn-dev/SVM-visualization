@@ -49,12 +49,12 @@ end
 legend({'+1:class A'; '-1:class B'}, 'FontSize', 16, 'Location', 'Best');
 hold off
 % Maximize figure
-set(gcf, 'units', 'normalized', 'outerposition', [0 0 1 1]);
+%set(gcf, 'units', 'normalized', 'outerposition', [0 0 1 1]);
 
-if ~exist('out', 'dir')
-   mkdir('out')
-end
-str_fig = strcat('./out/', 'SVM_', kernel.name, '_C=', num2str(Cost));
-saveas(gcf, str_fig, 'png');
-saveas(gcf, str_fig);
-return
+%if ~exist('out', 'dir')
+%   mkdir('out')
+%end
+%str_fig = strcat('./out/', 'SVM_', kernel.name, '_C=', num2str(Cost));
+%saveas(gcf, str_fig, 'png');
+%saveas(gcf, str_fig);
+%return
