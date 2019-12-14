@@ -226,12 +226,10 @@ end
 X = data(:,[1 2]);
 Y = data(:,3);
 
-if isequal(selectMethod, 'Spark')
-    opts.WindowStyle = 'replace';
-    opts.Interpreter = 'tex';
-    dlg = warndlg({'\fontsize{10}Please wait a moment.'; 'Spark use long time to calculate graph.'}, 'Warning', opts);
-    dlg.CloseRequestFcn = '';
-end
+opts.WindowStyle = 'replace';
+opts.Interpreter = 'tex';
+dlg = warndlg({'\fontsize{10}Please wait a moment.'; 'It use long time to calculate graph.'}, 'Warning', opts);
+dlg.CloseRequestFcn = '';
 
 kernel = Algo_Select(selectMethod, selectKernel);
 SVM_plot(X, Y, alpha, beta0, kernel);
