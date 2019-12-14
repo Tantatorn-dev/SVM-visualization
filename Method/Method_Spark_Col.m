@@ -7,7 +7,7 @@
 % Programmed by: Phumpathai Chansriwong
 %                ouoam2555@gmail.com
 
-function [ C_out ] = Method_Spark( A, B, func )
+function [ C_out ] = Method_Spark_Col( A, B, func )
 %------------------------------------------------------------%
 %
 % B is transpose then use top to bottom 

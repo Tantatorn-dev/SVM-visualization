@@ -6,12 +6,18 @@ addpath('./Kernel/');
 addpath('./FLA/');
 
 switch mode
-    case 'Loop 1D'
-        Mode = @Method_Loop_1D;
+    case 'Normal'
+        Mode = @Method_Normal;
+    case 'Loop 1D Col'
+        Mode = @Method_Loop_1D_Col;
+    case 'Loop 1D Row'
+        Mode = @Method_Loop_1D_Row;
     case 'Loop 2D'
         Mode = @Method_Loop_2D;
-    case 'Spark'
-        Mode = @Method_Spark;
+    case 'Spark Col'
+        Mode = @Method_Spark_Col;
+    case 'Spark Row'
+        Mode = @Method_Spark_Row;
     otherwise
         error('Do not have select mode')
 end

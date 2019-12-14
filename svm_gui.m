@@ -22,7 +22,7 @@ function varargout = svm_gui(varargin)
 
 % Edit the above text to modify the response to help svm_gui
 
-% Last Modified by GUIDE v2.5 13-Dec-2019 08:58:03
+% Last Modified by GUIDE v2.5 15-Dec-2019 00:37:40
 global isOpenFromM
 if isempty(isOpenFromM) || isOpenFromM == 0
     [ST, I] = dbstack('-completenames', 1);
@@ -94,7 +94,7 @@ function initialize_gui(fig_handle, handles, isreset)
 % we are we are just re-initializing a GUI by calling it from the cmd line
 % while it is up. So, bail out as we dont want to reset the data.
 
-set(handles.selectmethod, 'SelectedObject', handles.Normal);
+set(handles.selectmethod, 'SelectedObject', handles.radio_normal);
 
 % Update handles structure
 guidata(handles.figure1, handles);
@@ -324,3 +324,29 @@ function figure1_DeleteFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global isOpenFromM
 isOpenFromM = 0;
+
+
+% --- Executes on button press in pushbutton11.
+function pushbutton11_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton11 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+disp(1)
+
+
+% --- Executes when selected object is changed in selectkernel.
+function selectkernel_SelectionChangedFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in selectkernel 
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+normal = findobj(0,'tag','radio_normal');
+if strcmp(get(hObject, 'String'), 'RBF')
+    set(normal,'Enable','off');
+    
+    UIselectMethod = get(handles.selectmethod, 'SelectedObject');
+    if strcmp(get(UIselectMethod, 'String'), 'Normal')
+        set(handles.selectmethod, 'SelectedObject', handles.radio_loop_2d);
+    end
+else
+    set(normal,'Enable','on')
+end
