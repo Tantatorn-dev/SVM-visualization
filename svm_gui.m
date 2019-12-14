@@ -31,6 +31,8 @@ if isempty(isOpenFromM) || isOpenFromM == 0
             opts.WindowStyle = 'replace';
             opts.Interpreter = 'tex';
             errordlg({'\fontsize{10}Do not open fig file directly.', 'Open this GUI by call svm\_gui function in command windows.', 'Or click run in GUIDE.'}, 'Error', opts);
+            closereq();
+            return
         end
     end
     isOpenFromM = 1;
