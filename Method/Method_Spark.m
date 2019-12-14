@@ -12,7 +12,7 @@ function [ C_out ] = Method_Spark( A, B, func )
 %
 % B is transpose then use top to bottom 
 %
-  C = zeros(size(A,1),size(B,1)); %Gram Matrix
+  C = zeros(size(A, 1), size(B, 1)); %Gram Matrix
 %------------------------------------------------------------%
 
   [ BT, ...

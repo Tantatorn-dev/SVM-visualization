@@ -26,7 +26,9 @@ kernel = Algo_Select('Loop', char(Kernel_Cell(3)));
 %
 [alpha, Ker, beta0] = SVM(X, Y, kernel);
 
+disp(" ");
+disp(" ");
+disp("If you want to use GUI. Call svm_gui !!!")
+
 % Step 4: Visualize the 2D plot
 SVM_plot(X, Y, alpha, beta0, kernel);
-
-
