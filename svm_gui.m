@@ -224,9 +224,19 @@ end
 X = data(:,[1 2]);
 Y = data(:,3);
 
-kernel = Algo_Select(selectMethod, selectKernel);
+if isequal(selectMethod, 'Spark')
+    opts.WindowStyle = 'replace';
+    opts.Interpreter = 'tex';
+    dlg = warndlg({'\fontsize{10}Please wait a moment.'; 'Spark use long time to calculate graph.'}, 'Warning', opts);
+    dlg.CloseRequestFcn = '';
+end
 
+kernel = Algo_Select(selectMethod, selectKernel);
 SVM_plot(X, Y, alpha, beta0, kernel);
+
+if exist('dlg','var') == 1
+    delete(dlg);
+end
 
 
 % --- Executes on button press in addDataButton.
