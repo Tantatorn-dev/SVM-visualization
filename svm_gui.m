@@ -22,8 +22,19 @@ function varargout = svm_gui(varargin)
 
 % Edit the above text to modify the response to help svm_gui
 
-% Last Modified by GUIDE v2.5 12-Dec-2019 23:50:04
-
+% Last Modified by GUIDE v2.5 13-Dec-2019 08:58:03
+global isOpenFromM
+if isempty(isOpenFromM) || isOpenFromM == 0
+    [ST, I] = dbstack('-completenames', 1);
+    if size(ST, 1) > 0
+        if strcmp(ST(end).name, 'uiopen')
+            opts.WindowStyle = 'replace';
+            opts.Interpreter = 'tex';
+            errordlg({'\fontsize{10}Do not open fig file directly.', 'Open this GUI by call svm\_gui function in command windows.', 'Or click run in GUIDE.'}, 'Error', opts);
+        end
+    end
+    isOpenFromM = 1;
+end
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
@@ -151,7 +162,7 @@ data = get(handles.datasetTable, 'data');
 if size(data, 1) == 0
     opts.WindowStyle = 'replace';
     opts.Interpreter = 'tex';
-    errordlg({'\fontsize{10} Input Data is empty.'}, 'Error', opts);
+    errordlg({'\fontsize{10}Input Data is empty.'}, 'Error', opts);
     return
 end
 
@@ -294,3 +305,12 @@ if ~isempty(eventdata.Indices)
         set(handles.datasetTable, 'data', data);
     end
 end
+
+
+% --- Executes during object deletion, before destroying properties.
+function figure1_DeleteFcn(hObject, eventdata, handles)
+% hObject    handle to figure1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global isOpenFromM
+isOpenFromM = 0;
