@@ -232,11 +232,19 @@ dlg = warndlg({'\fontsize{10}Please wait a moment.'; 'It use long time to calcul
 dlg.CloseRequestFcn = '';
 
 kernel = Algo_Select(selectMethod, selectKernel);
+tic
 SVM_plot(X, Y, alpha, beta0, kernel);
+t = toc;
 
 if exist('dlg','var') == 1
     delete(dlg);
 end
+
+timeTable = get(handles.timeTable, 'data');
+timeTable(2:end+1, :) = timeTable(1:end, :);
+timeTable(1,:) = {selectMethod, selectKernel, t};
+set(handles.timeTable,'data',timeTable);
+
 
 
 % --- Executes on button press in addDataButton.
